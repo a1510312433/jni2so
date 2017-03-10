@@ -8,18 +8,23 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.com.jnihello.adapter.RecyAdapter;
 import me.com.jnihello.bean.RecyBean;
+import me.com.jnihello.common.RecyclerItemClickListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,25 +53,39 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-//        TextView textView = ((TextView) findViewById(R.id.hello));
-//        textView.setText(JNIMethod.sayHello());
+        TextView textView = ((TextView) findViewById(R.id.hello));
+        textView.setText(JNIMethod.sayHello());
 
         for (int i = 0; i < 99; i++) {
             list.add(new RecyBean("我的位置是" + i));
         }
         adapter = new RecyAdapter(list);
 
-        RecyclerView recyclerView = ((RecyclerView) findViewById(R.id.recy));
+        recyclerView = ((RecyclerView) findViewById(R.id.recy));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 //        recyclerView.setItemAnimator(new DefaultItemAnimator());
 //        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(recyclerView) {
+
+            @Override
+            public void onItemClick(RecyAdapter.recyViewHolder holder,int position) {
+//                holder.getItemId();
+//                holder.itemtext.setText("");
+                Toast.makeText(MainActivity.this,"我的顺序是"+position+holder.itemtext.getText(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onItemLongClick(RecyAdapter.recyViewHolder holder, int position) {
+                Toast.makeText(MainActivity.this,"长按-我的顺序是"+position+holder.itemtext.getText(),Toast.LENGTH_LONG).show();
+            }
+        });
 
     }
 
     RecyAdapter adapter;
     List<RecyBean> list = new ArrayList<>();
-
+    RecyclerView recyclerView;
     @Override
     protected void onResume() {
         super.onResume();
@@ -98,7 +117,24 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.vertical) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            Toast.makeText(this, "纵向listview", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (id == R.id.horizental) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+            Toast.makeText(this, "横向listview", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (id == R.id.pubu) {
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL));
+            Toast.makeText(this, "瀑布流", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (id == R.id.grid) {
+            recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+            Toast.makeText(this, "gridview", Toast.LENGTH_SHORT).show();
             return true;
         }
 

@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -32,6 +33,9 @@ public class RecyAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         recyViewHolder recyViewHolder = (RecyAdapter.recyViewHolder) holder;
+//        recyViewHolder.itemtext.setHeight(Integer.parseInt(Math.random()*100+20+""));
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,(int)(Math.random()*100+20));
+        recyViewHolder.itemtext.setLayoutParams(params);
         recyViewHolder.itemtext.setText(list.get(position).getContent());
     }
 
@@ -39,8 +43,8 @@ public class RecyAdapter extends RecyclerView.Adapter{
     public int getItemCount() {
         return list!=null?list.size():0;
     }
-    static class recyViewHolder extends RecyclerView.ViewHolder{
-        TextView itemtext;
+    public static class recyViewHolder extends RecyclerView.ViewHolder{
+        public TextView itemtext;
         public recyViewHolder(View itemView) {
             super(itemView);
             itemtext = ((TextView) itemView.findViewById(R.id.itemtext));
